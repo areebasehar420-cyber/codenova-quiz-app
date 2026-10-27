@@ -1,0 +1,90 @@
+[
+  {
+    "q": "Which keyword declares a block-scoped variable that can be reassigned?",
+    "o": [
+      "var",
+      "let",
+      "const",
+      "static"
+    ],
+    "a": 1,
+    "e": "let is block-scoped and reassignable. const is block-scoped but cannot be reassigned."
+  },
+  {
+    "q": "What does typeof null return?",
+    "o": [
+      "\"null\"",
+      "\"undefined\"",
+      "\"object\"",
+      "\"number\""
+    ],
+    "a": 2,
+    "e": "This is a long-standing quirk of JavaScript: typeof null is \"object\"."
+  },
+  {
+    "q": "Which method adds an item to the end of an array?",
+    "o": [
+      "push()",
+      "pop()",
+      "shift()",
+      "unshift()"
+    ],
+    "a": 0,
+    "e": "push() appends to the end and returns the new length."
+  },
+  {
+    "q": "What is the result of 2 + \"2\"?",
+    "o": [
+      "4",
+      "\"22\"",
+      "NaN",
+      "Error"
+    ],
+    "a": 1,
+    "e": "The + operator concatenates when one side is a string, so the result is \"22\"."
+  },
+  {
+    "q": "Which array method returns a new array of items that pass a test?",
+    "o": [
+      "map()",
+      "forEach()",
+      "filter()",
+      "reduce()"
+    ],
+    "a": 2,
+    "e": "filter() keeps only the items for which the callback returns true."
+  },
+  {
+    "q": "How do you select an element with id=\"box\"?",
+    "o": [
+      "document.query(\"box\")",
+      "document.getElementById(\"box\")",
+      "document.getElement(\"#box\")",
+      "document.id(\"box\")"
+    ],
+    "a": 1,
+    "e": "getElementById (or querySelector(\"#box\")) selects the element."
+  },
+  {
+    "q": "What does === check?",
+    "o": [
+      "Value only",
+      "Type only",
+      "Value and type",
+      "Reference only"
+    ],
+    "a": 2,
+    "e": "Strict equality compares both value and type, with no coercion."
+  },
+  {
+    "q": "Which function parses JSON text into an object?",
+    "o": [
+      "JSON.stringify()",
+      "JSON.parse()",
+      "JSON.decode()",
+      "JSON.object()"
+    ],
+    "a": 1,
+    "e": "JSON.parse() turns a JSON string into a JavaScript value."
+  }
+]

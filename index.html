@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JS Basics Quiz</title>
+<style>
+:root{box-sizing:border-box;--bg:#f3f5f9;--card:#fff;--ink:#14213d;--mute:#5b6478;--line:#d9dee8;--accent:#2b59c3;--ok:#14794a;--okbg:#e0f5ea;--bad:#b3261e;--badbg:#fde8e6;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1524;--card:#18203a;--ink:#eef1f8;--mute:#9aa4bd;--line:#2c3656;--accent:#7fa2ff;--ok:#5fd39b;--okbg:#12362a;--bad:#ff8f87;--badbg:#3d1a1a}}
+:root[data-theme="dark"]{--bg:#0f1524;--card:#18203a;--ink:#eef1f8;--mute:#9aa4bd;--line:#2c3656;--accent:#7fa2ff;--ok:#5fd39b;--okbg:#12362a;--bad:#ff8f87;--badbg:#3d1a1a}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 Georgia,"Times New Roman",serif;min-height:100vh;display:grid;place-items:center;padding:16px}
+main{width:100%;max-width:640px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px}
+h1{font-size:1.5rem;margin:0 0 8px;line-height:1.25}
+h2{font-size:1.3rem;margin:16px 0;line-height:1.35}
+p{color:var(--mute);margin:0 0 16px}
+.top{display:flex;justify-content:space-between;font-family:system-ui,sans-serif;font-size:.9rem;color:var(--mute)}
+.bar{height:8px;background:var(--line);border-radius:4px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.opts{display:grid;gap:10px;padding:0;margin:0;list-style:none}
+button{font:inherit;cursor:pointer}
+.opt{width:100%;text-align:left;padding:14px 16px;min-height:48px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}
+.opt.bad{border-color:var(--bad);background:var(--badbg)}
+.main-btn{margin-top:18px;padding:12px 22px;min-height:48px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-family:system-ui,sans-serif;font-weight:600}
+:root[data-theme="dark"] .main-btn{color:#0f1524}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.fb{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.95rem}
+.big{font-size:3rem;margin:8px 0;font-weight:700}
+.hidden{display:none}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+ <section id="start">
+  <h1>JavaScript basics quiz</h1>
+  <p>8 questions. You see the answer and an explanation after each one.</p>
+  <button class="main-btn" id="go">Start quiz</button>
+ </section>
+ <section id="quiz" class="hidden" aria-live="polite">
+  <div class="top"><span id="prog">Question 1 of 8</span><span id="score">Score: 0</span></div>
+  <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="pb"><i id="fill"></i></div>
+  <h2 id="q"></h2>
+  <ul class="opts" id="opts"></ul>
+  <div class="fb hidden" id="fb"></div>
+  <button class="main-btn hidden" id="next">Next question</button>
+ </section>
+ <section id="end" class="hidden">
+  <h1>Quiz complete</h1>
+  <div class="big" id="final"></div>
+  <p id="msg"></p>
+  <button class="main-btn" id="again">Restart quiz</button>
+ </section>
+</main>
+<script type="application/json" id="data">
+[
+{"q":"Which keyword declares a block-scoped variable that can be reassigned?","o":["var","let","const","static"],"a":1,"e":"let is block-scoped and reassignable. const is block-scoped but cannot be reassigned."},
+{"q":"What does typeof null return?","o":["\"null\"","\"undefined\"","\"object\"","\"number\""],"a":2,"e":"This is a long-standing quirk of JavaScript: typeof null is \"object\"."},
+{"q":"Which method adds an item to the end of an array?","o":["push()","pop()","shift()","unshift()"],"a":0,"e":"push() appends to the end and returns the new length."},
+{"q":"What is the result of 2 + \"2\"?","o":["4","\"22\"","NaN","Error"],"a":1,"e":"The + operator concatenates when one side is a string, so the result is \"22\"."},
+{"q":"Which array method returns a new array of items that pass a test?","o":["map()","forEach()","filter()","reduce()"],"a":2,"e":"filter() keeps only the items for which the callback returns true."},
+{"q":"How do you select an element with id=\"box\"?","o":["document.query(\"box\")","document.getElementById(\"box\")","document.getElement(\"#box\")","document.id(\"box\")"],"a":1,"e":"getElementById (or querySelector(\"#box\")) selects the element."},
+{"q":"What does === check?","o":["Value only","Type only","Value and type","Reference only"],"a":2,"e":"Strict equality compares both value and type, with no coercion."},
+{"q":"Which function parses JSON text into an object?","o":["JSON.stringify()","JSON.parse()","JSON.decode()","JSON.object()"],"a":1,"e":"JSON.parse() turns a JSON string into a JavaScript value."}
+]
+</script>
+<script>
+const $=id=>document.getElementById(id);
+let Q=JSON.parse(document.getElementById('data').textContent);
+let i=0,score=0,answered=false;
+// Load questions.json when hosted; embedded copy is the fallback (e.g. file://)
+fetch('questions.json').then(r=>r.json()).then(d=>{Q=d}).catch(()=>{});
+function show(s){['start','quiz','end'].forEach(x=>$(x).classList.toggle('hidden',x!==s))}
+function render(){
+  const c=Q[i];answered=false;
+  $('prog').textContent=`Question ${i+1} of ${Q.length}`;
+  $('score').textContent=`Score: ${score}`;
+  const pct=Math.round(i/Q.length*100);
+  $('fill').style.width=pct+'%';$('pb').setAttribute('aria-valuenow',pct);
+  $('q').textContent=c.q;
+  $('opts').innerHTML='';
+  c.o.forEach((t,k)=>{
+    const li=document.createElement('li'),b=document.createElement('button');
+    b.className='opt';b.textContent=t;b.onclick=()=>pick(k);
+    li.appendChild(b);$('opts').appendChild(li);
+  });
+  $('fb').classList.add('hidden');$('next').classList.add('hidden');
+}
+function pick(k){
+  if(answered)return;answered=true;
+  const c=Q[i],btns=[...document.querySelectorAll('.opt')];
+  btns.forEach((b,n)=>{b.disabled=true;if(n===c.a)b.classList.add('ok')});
+  if(k===c.a)score++;else btns[k].classList.add('bad');
+  $('score').textContent=`Score: ${score}`;
+  $('fb').textContent=(k===c.a?'Correct. ':'Not quite. ')+c.e;
+  $('fb').classList.remove('hidden');
+  $('next').textContent=i===Q.length-1?'See results':'Next question';
+  $('next').classList.remove('hidden');$('next').focus();
+}
+$('next').onclick=()=>{
+  if(i<Q.length-1){i++;render()}
+  else{
+    $('final').textContent=`${score} / ${Q.length}`;
+    const p=score/Q.length;
+    $('msg').textContent=p>=.75?'Strong result. You know your JavaScript basics.':p>=.5?'Good start. Review the explanations and try again.':'Keep practicing. Try again after revisiting the basics.';
+    show('end');
+  }
+};
+function start(){i=0;score=0;show('quiz');render()}
+$('go').onclick=start;$('again').onclick=start;
+</script>
+</body>
+</html>
